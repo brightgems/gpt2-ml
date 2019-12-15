@@ -150,7 +150,7 @@ def article_iterator(tokenizer):
                             article['text'])  # for news2016zh text body
                         tokens = tokenizer.tokenize(line)
                         input_ids = tokenizer.convert_tokens_to_ids(tokens)
-
+                        
                         article['input_ids'] = input_ids
 
                         article['inst_index'] = (l_no // args.num_folds)
@@ -172,12 +172,23 @@ def create_int_feature(values):
 
 def buffered_and_sliding_window_article_iterator(tokenizer, final_desired_size=1025):
     """ We apply a sliding window to fix long sequences, and use a buffer that combines short sequences."""
+    def padding_r(tokens):
+        while len(tokens) < final_desired_size:
+            tokens.append(0)
+        return tokens
+
+    window_buffer= 64
     for article in article_iterator(tokenizer):
-        if len(article['input_ids']) >= final_desired_size:
-            article['input_ids'] = article['input_ids'][0:final_desired_size-1]
-        while len(article['input_ids']) < final_desired_size:
-            article['input_ids'].append(0)
-        yield article
+        tokens = article['input_ids']
+        while len(tokens) >= final_desired_size:
+            data = article.copy()
+            data['input_ids'] = padding_r(tokens[:final_desired_size-1])
+            tokens = tokens[final_desired_size-window_buffer-1:]
+            yield data
+        if tokens:
+            data = article.copy()
+            data['input_ids'] = padding_r(tokens)
+            yield data
 
 
 # OK now write the tfrecord file
@@ -185,7 +196,7 @@ total_written = 0
 train_file = args.base_fn + 'train_wiki19_{:04d}.tfrecord'.format(args.fold)
 with S3TFRecordWriter(train_file) as train_writer:
     for article in buffered_and_sliding_window_article_iterator(tokenizer,
-                                                                final_desired_size=max(args.max_seq_length + 1, 1025)):
+                                                                final_desired_size=args.max_seq_length + 1):
         writer2use = train_writer
         assert len(article['input_ids']) == (args.max_seq_length + 1)
 
