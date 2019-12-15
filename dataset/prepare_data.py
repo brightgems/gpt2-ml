@@ -64,9 +64,10 @@ parser.add_argument(
 args = parser.parse_args()
 random.seed(args.seed + args.fold)
 
-#encoder = get_encoder()
+proj_root_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+vocab_file_path = os.path.join(proj_root_path, "tokenization/bert-base-chinese-vocab.txt")
 tokenizer = tokenization.FullTokenizer(
-    vocab_file="bert-base-chinese-vocab.txt", do_lower_case=True)
+    vocab_file=vocab_file_path, do_lower_case=True)
 
 
 class S3TFRecordWriter(object):
