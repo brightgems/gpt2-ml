@@ -159,7 +159,7 @@ def article_iterator(tokenizer):
                                                                             tokens,
                                                                             input_ids
                                                                             ), flush=True)
-                        if len(article['input_ids']) <= 64:  # min size of article
+                        if len(article['input_ids']) <= 24:  # min size of article
                             continue
                         yield article
 
