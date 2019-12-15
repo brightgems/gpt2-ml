@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-NUM_FOLDS=1024
 MAX_SEQ_LENGTH=512
 IN_FN=${1}
 OUT_FN=${2}
+NUM_FOLDS={3}
 
 rm -rf logs_${MAX_SEQ_LENGTH}
 mkdir logs_${MAX_SEQ_LENGTH}
