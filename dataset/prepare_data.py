@@ -183,8 +183,8 @@ def buffered_and_sliding_window_article_iterator(tokenizer, final_desired_size=1
         tokens = article['input_ids']
         while len(tokens) >= final_desired_size:
             data = article.copy()
-            data['input_ids'] = padding_r(tokens[:final_desired_size-1])
-            tokens = tokens[final_desired_size-window_buffer-1:]
+            data['input_ids'] = padding_r(tokens[:final_desired_size])
+            tokens = tokens[final_desired_size-window_buffer:]
             yield data
         if tokens:
             data = article.copy()
