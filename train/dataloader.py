@@ -62,7 +62,7 @@ def input_fn_builder(input_files,
                     tf.data.TFRecordDataset,
                     sloppy=is_training,
                     cycle_length=cycle_length))
-            d = d.shuffle(buffer_size=1000)
+            d = d.shuffle(buffer_size=10000)
         else:
             d = tf.data.TFRecordDataset(input_files)
             # If we evaluate for a fixed number of steps we don't want to encounter
