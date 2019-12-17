@@ -163,7 +163,7 @@ with tf.Session(config=tf_config, graph=tf.Graph()) as sess:
     p_for_topp = tf.placeholder(tf.float32, [batch_size_per_chunk])
     eos_token = tf.placeholder(tf.int32, [])
     min_len = tf.placeholder(tf.int32, [])
-    do_topk = args.top_p>1
+    do_topk = args.top_p>=1
     tokens, probs = sample(news_config=news_config, initial_context=initial_context,
                            eos_token=eos_token, min_len=min_len, ignore_ids=None, p_for_topp=p_for_topp,
                            do_topk=do_topk)
