@@ -649,7 +649,7 @@ def model_fn_builder(config: GroverConfig, init_checkpoint, learning_rate,
                     loss=total_loss,
                     train_op=train_op,
                     training_hooks=[
-                        tf.train.LoggingTensorHook({'loss': tf.metrics.mean(total_loss)[1]}, every_n_iter=100)],
+                        tf.train.LoggingTensorHook({'loss': tf.metrics.mean(total_loss)[1],'learning_rate':tf.metrics.mean(train_metrics['learning_rate'])[1]}, every_n_iter=100)],
                     scaffold_fn=scaffold_fn)
 
         elif mode == tf.estimator.ModeKeys.EVAL:
